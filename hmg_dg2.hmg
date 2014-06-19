@@ -1,0 +1,29 @@
+g:Tool
+
+0:scissor:"cut cut!"
+0:knife:"slash"
+0:hammer:"hit it"
+0:sledgehammer:"Invalid"
+0:pen:"writing"
+0:pencil:"drawing"
+0:ruler:"straight"
+
+
+
+
+
+g:Family
+1:mother:"Invalid"
+1:father:"Invalid"
+1:grandmother:"Invalid"
+1:grandfather:"Invalid"
+1:son:"Invalid"
+1:daughter:"Invalid"
+1:uncle:"Invalid"
+1:aunt:"Invalid"
+1:adult:"Invalid"
+
+g:Sample
+2:hello:
+
+
