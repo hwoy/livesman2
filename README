@@ -23,7 +23,7 @@ Required libraries
 
 How to make
 1. get clone https://github.com/hwoy/livesman2.git
-2. cd livesman
+2. cd livesman2
 3. make require
 4. make
 
