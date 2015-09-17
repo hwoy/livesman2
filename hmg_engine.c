@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "hmg_engine.h"
-#include "mem/mem.h"
+
 
 #define UNCH '_'
 
@@ -22,10 +22,11 @@ hmf_random (int min, int max)
 
 
 assem *
-hmf_init (int id)
+hmf_init (int id, memman * mm)
 {
   assem *asmb;
-  if (!(asmb = (assem *) malloc (sizeof (assem))))
+
+  if (!(asmb = (assem *) mm_malloc (mm, sizeof (assem))))
     {
       return (assem *) 0;
     }
@@ -36,19 +37,26 @@ hmf_init (int id)
 
 /*********************************** free functions ********************************/
 void
-hmf_free (assem * asmb)
+hmf_free (assem * asmb, memman * mm)
 {
+  linklist *tmp, *ptr;
+  for (ptr = asmb->begin; ptr; ptr = ptr->forw)
+    {
+      tmp = ptr->forw;
+      mm_free (mm, tmp->ptr);
+      mm_free (mm, tmp);
+    }
 
-  l2_freeall (asmb);
-  free (asmb);
+  mm_free (mm, asmb);
+
 }
 
 
 int
-hmf_add (assem * asmb, void *obj)
+hmf_add (assem * asmb, void *obj, memman * mm)
 {
   linklist *list;
-  if (!(list = l2_new ()))
+  if (!(list = mm_malloc (mm, sizeof (linklist))))
     return 0;
   list->ptr = obj;
   l2_add (asmb, list);
@@ -101,12 +109,12 @@ hmf_getdata (assem * asmb, unsigned int gid, unsigned int index)
 
 /*********************************** init game functions ********************************/
 hms_game *
-hmf_initgame (hms_data * data, unsigned int lives)
+hmf_initgame (hms_data * data, unsigned int lives, memman * mm)
 {
   hms_game *game;
   unsigned int i;
 
-  if (!(game = (hms_game *) malloc (sizeof (hms_game))))
+  if (!(game = (hms_game *) mm_malloc (mm, sizeof (hms_game))))
     {
       return (hms_game *) 0;
     }
@@ -224,10 +232,4 @@ hmf_solve (hms_game * game)
     }
   game->name[i * 2] = game->data->name[i];
   return game;
-}
-
-void
-hmf_freegame (hms_game * game)
-{
-  free (game);
 }

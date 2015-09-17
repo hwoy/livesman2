@@ -11,14 +11,14 @@ main.o: main.c
 	$(cc) -c $(CFLAGS) main.c
 hmg_engine.o: hmg_engine.c
 	$(cc) -c $(CFLAGS) hmg_engine.c
-hmg_engine.a: hmg_engine.o liteList/linklist.o
-	$(ar) rc hmg_engine.a hmg_engine.o liteList/linklist.o
+hmg_engine.a: hmg_engine.o liteList/linklist.o mem/mem.o
+	$(ar) rc hmg_engine.a hmg_engine.o liteList/linklist.o mem/mem.o
 function.o:	function.c
 	$(cc) -c $(CFLAGS) function.c
 require:
 	git clone https://github.com/hwoy/linklist.git && \
 git clone https://github.com/hwoy/grap.git && \
-make -C spec && make -C liteList && make -C grap
+make -C spec && make -C liteList && make -C grap && make -C mem
 
 clean:
 	rm -f $(bin) *.o *~ *.a

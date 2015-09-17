@@ -6,6 +6,7 @@
 #include "function.h"
 
 
+
 #define BUFFSIZE 1024
 #define GP_NLEN 32
 #define GP_NCHAR HMC_HINTLEN+1
@@ -51,7 +52,7 @@ static char *grappath (char *path);
 static void showhelp (const char *str);
 static void showscore (unsigned int score, int mlives, const char *gname,
 		       const char *datafile);
-static void freeallasm (void);
+
 
 static assem *gas, *das;
 static hms_game *game;
@@ -60,6 +61,7 @@ static unsigned int gcount = 1, newgame = 1;
 
 static unsigned int gselected, dselected;
 static unsigned int nstep, addlivestep = ADDLIVESTEP;
+static memman mm;
 
 int
 main (int argc, char *argv[])
@@ -125,18 +127,20 @@ main (int argc, char *argv[])
     }
 
 /*******************************************************************************************************************/
-
-  if (!(gas = hmf_init (0)))
+  mm_init (&mm);
+/***********************************************/
+  if (!(gas = hmf_init (0, &mm)))
     {
       fprintf (stderr,
 	       "ERR INIT GAS: Can not alloc memory for group assembly\n");
+      mm_freeall (&mm);
       return 1;
     }
 
   if (!(gfp = fopen (GFILE, "r")))
     {
       perror (GFILE);
-      hmf_free (gas);
+      mm_freeall (&mm);
       return 1;
     }
 
@@ -147,7 +151,7 @@ main (int argc, char *argv[])
 
       if (i < 0)
 	{
-	  hmf_free (gas);
+	  hmf_free (&mm, gas);
 	  fclose (gfp);
 	  fprintf (stderr, "ERR FILE: %s\n", GFILE);
 
@@ -182,18 +186,18 @@ main (int argc, char *argv[])
 		    {
 		      fprintf (stderr,
 			       "ERR NEWGRP: Can not alloc memory for group\n");
-		      hmf_free (gas);
+		      mm_freeall (&mm);
 		      fclose (gfp);
 		      return 1;
 		    }
 
 		  strcpy (gptr->name, gr[j]);
 
-		  if (!hmf_add (gas, gptr))
+		  if (!hmf_add (gas, gptr, &mm))
 		    {
 		      fprintf (stderr,
 			       "ERR ADDGRP: Can not add linklist for group\n");
-		      hmf_free (gas);
+		      mm_freeall (&mm);
 		      fclose (gfp);
 		      return 1;
 		    }
@@ -216,7 +220,7 @@ main (int argc, char *argv[])
 		}
 	      fprintf (stderr, "\n");
 
-	      hmf_free (gas);
+	      mm_freeall (&mm);
 	      fclose (gfp);
 	      return 1;
 	    }
@@ -234,7 +238,7 @@ main (int argc, char *argv[])
 		}
 	      fprintf (stderr, "\n");
 
-	      hmf_free (gas);
+	      mm_freeall (&mm);
 	      fclose (gfp);
 	      return 1;
 	    }
@@ -250,15 +254,16 @@ main (int argc, char *argv[])
       fprintf (stderr,
 	       "ERR INITGAME: FILE <%s> :Nuber of group must'n be <0>\n",
 	       grappath (GFILE));
-      hmf_free (gas);
+      mm_freeall (&mm);
       return 1;
     }
 
+
 /*******************************************************************************************************************/
 
-  if (!(das = hmf_init (1)))
+  if (!(das = hmf_init (1, &mm)))
     {
-      hmf_free (gas);
+      mm_freeall (&mm);
       fprintf (stderr,
 	       "ERR INIT DAS: Can not alloc memory for data assembly\n");
       return 1;
@@ -267,7 +272,7 @@ main (int argc, char *argv[])
   if (!(dfp = fopen (DFILE, "r")))
     {
       perror (DFILE);
-      freeallasm ();
+      mm_freeall (&mm);
       return 1;
     }
 
@@ -287,7 +292,7 @@ main (int argc, char *argv[])
 		{
 		  fprintf (stderr,
 			   "ERR NEWDATA: Can not alloc memory for data\n");
-		  freeallasm ();
+		  mm_freeall (&mm);
 		  fclose (dfp);
 		  return 1;
 		}
@@ -303,8 +308,7 @@ main (int argc, char *argv[])
 		    }
 		  fprintf (stderr, "\n");
 
-		  free (dptr);
-		  freeallasm ();
+		  mm_freeall (&mm);
 		  fclose (dfp);
 		  return 1;
 		}
@@ -315,7 +319,7 @@ main (int argc, char *argv[])
 			   "ERR ADDDATA: < %s > :String length of guess word must not be 0\n",
 			   grappath (DFILE));
 		  free (dptr);
-		  freeallasm ();
+		  mm_freeall (&mm);
 		  fclose (dfp);
 		  return 1;
 		}
@@ -324,11 +328,11 @@ main (int argc, char *argv[])
 	      strcpy (dptr->name, gr[1]);
 	      strcpy (dptr->hint, gr[2]);
 
-	      if (!hmf_add (das, dptr))
+	      if (!hmf_add (das, dptr, &mm))
 		{
 		  fprintf (stderr,
 			   "ERR ADDDATA: Can not add linklist for data\n");
-		  freeallasm ();
+		  mm_freeall (&mm);
 		  fclose (dfp);
 		  return 1;
 		}
@@ -353,7 +357,7 @@ main (int argc, char *argv[])
 	  gcount++;
 	  lives = game->lives;
 	  newgame = 0;
-	  hmf_freegame (game);
+	  mm_free (&mm, game);
 	}
 
       else if (j == NGID)
@@ -362,14 +366,14 @@ main (int argc, char *argv[])
 		     hmf_getgroup (gas, gselected)->name, grappath (GFILE));
 	  gcount = 1;
 	  newgame = 1;
-	  hmf_freegame (game);
+	  mm_free (&mm, game);
 	}
 
       else if (j == SKID)
 	{
 	  lives = game->lives;
 	  newgame = 0;
-	  hmf_freegame (game);
+	  mm_free (&mm, game);
 	}
 
       else if (j == LOSID)
@@ -399,7 +403,7 @@ main (int argc, char *argv[])
 	    {			/* Press Y */
 	      gcount = 1;
 	      newgame = 1;
-	      hmf_freegame (game);
+	      mm_free (&mm, game);
 	    }
 
 	}
@@ -413,10 +417,10 @@ main (int argc, char *argv[])
 
   if ((j != FALID) && (j != GSEXTID))
     {
-      hmf_freegame (game);
+      mm_free (&mm, game);
     }
 
-  freeallasm ();
+  mm_freeall (&mm);
 
   return j == FALID ? 1 : 0;
 }
@@ -488,7 +492,7 @@ if((n-1)%NCOL)   {putchar(NL);}
     }
   /* End of new game procedure */
   dselected = hmf_random (0, hmf_getndata (das, gselected) - 1);
-  game = hmf_initgame (hmf_getdata (das, gselected, dselected), lives);
+  game = hmf_initgame (hmf_getdata (das, gselected, dselected), lives, &mm);
   if (!game)
     {
       fprintf (stderr, "ERR INITGAME: Can not init for a game\n");
@@ -634,11 +638,4 @@ showscore (unsigned int score, int mlives, const char *gname,
   printf ("\n<< Game data: %s >>\n", datafile);
   printf ("<< You have selected %s group >>\n", gname);
   printf ("<< You have %u wins in %u lives >>\n", score, mlives);
-}
-
-static void
-freeallasm (void)
-{
-  hmf_free (gas);
-  hmf_free (das);
 }
