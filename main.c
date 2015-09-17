@@ -198,7 +198,7 @@ main (int argc, char *argv[])
 		      return 1;
 		    }
 
-		  GPTR (gas->endx->ptr)->gid = gas->endx->idx;
+		  GPTR (gas->end->ptr)->gid = gas->end->id;
 
 		}
 	    }
@@ -438,7 +438,7 @@ playhmg (int ng)
 	  puts
 	    ("\n********************* List of groups *********************");
 	  printf ("                      [ %s ]\n\n", grappath (GFILE));
-	  for (n = 1, ptr = gas->beginx; ptr; ptr = ptr->forwx, n++)
+	  for (n = 1, ptr = gas->begin; ptr; ptr = ptr->forw, n++)
 	    {
 
 	      printf ("%u = %s (%u)\n", GPTR (ptr->ptr)->gid,
