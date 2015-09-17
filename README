@@ -1,15 +1,16 @@
 LivesMan version 2
  is free puzzle game.
-This source can be compiled by c compiler.
+This source can be compiled by ansi-c compiler.
 
-All line of source implement with ANSI C standard
+All line of source implement with ANSI C standard (both syntax and functions)
 Testing compiler
 
 1. gcc on linux
-2. pocc on windows
-3. cl (Microsof c) on windows
+2. gcc for windows
+3. pocc on windows (function rand() bad work)
+4. cl (Microsof c) on windows
 
-4. tcc can compile it on dos 16 bits with or without extended memory.
+5. tcc can compile it on dos 16 bits with or without extended memory.
    Requies modified codes for success compiling. Such as
 
 	4.1 Change file path at #include directves to 8.3 file format
@@ -17,9 +18,10 @@ Testing compiler
 
 Required libraries
 
-1. grap
-2. opt
-3. liteList
+1. grap (function like cut command)
+2. opt (function like getopt)
+3. liteList (one-dimention link list)
+4. mem (malloc manager)
 
 How to make
 1. git clone https://github.com/hwoy/livesman2.git
