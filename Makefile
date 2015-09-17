@@ -5,8 +5,8 @@ ar = ar
 .PHONY: all clean distclean require deps
 
 all: $(bin)
-$(bin): main.o hmg_engine.o function.o grap/grap.o mem/mem.o liteList/linklist.o
-	$(cc) -o $(bin) main.o hmg_engine.o function.o grap/grap.o mem/mem.o liteList/linklist.o
+$(bin): main.o hmg_engine.o function.o grap/grap.o mem/mem.o liteList/linklist.o opt/opt.o
+	$(cc) -o $(bin) main.o hmg_engine.o function.o grap/grap.o mem/mem.o liteList/linklist.o opt/opt.o
 
 
 main.o: main.c
@@ -23,20 +23,23 @@ mem/mem.o: mem/mem.c
 	make -C mem 
 linkList/linklist.o: linkList/linklist.c
 	make -C linkList 
+opt/opt.o: opt/opt.c
+	make -C opt 
 
 
 require:
 	git clone https://github.com/hwoy/liteList.git && \
 git clone https://github.com/hwoy/grap.git && \
 git clone https://github.com/hwoy/mem.git && \
+git clone https://github.com/hwoy/opt.git && \
 && make deps
 deps:
-	make -C liteList && make -C grap && make -C mem
+	make -C liteList && make -C grap && make -C mem && make -C opt
 
 
 
 clean:
 	rm -f $(bin) *.o *~ *.a
 distclean:
-	make clean && make -C liteList clean && make -C grap clean && make -C mem clean
+	make clean && make -C liteList clean && make -C grap clean && make -C mem clean && make -C opt clean
 

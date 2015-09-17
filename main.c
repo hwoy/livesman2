@@ -5,6 +5,7 @@
 #include "liteList/linklist.h"
 #include "mem/mem.h"
 #include "grap/grap.h"
+#include "opt/opt.h"
 
 #include "hmg_engine.h"
 #include "function.h"
@@ -44,7 +45,7 @@ static const char STR_HMG_NAME[] = "LivesMan Game";
 static const char STR_HMG_VERSION[] = "2.27";
 static const char STR_HMG_YEAR[] = "2014";
 
-static char *GFILE;
+static char GFILE[BUFFSIZE];
 #define DFILE GFILE
 
 static const char GPREFIX[] = "g";
@@ -68,73 +69,81 @@ static unsigned int gselected, dselected;
 static unsigned int nstep, addlivestep = ADDLIVESTEP;
 static memman mm;
 
+static const char *param[] = { "-l:", "-s:", NULL };
+static const char *paramdes[] = { "-l:{n} n lives", "-s:{n} n steps", NULL };
+
+enum __param
+{
+  e_live, e_step
+};
+
 int
-main (int argc, char *argv[])
+main (int argc, const char *argv[])
 {
   hms_group *gptr;
   hms_data *dptr;
   FILE *gfp, *dfp;
 
   int i, j;
+/*******************************************************************************/
 
-/*******************************************************************************************************************/
-
-  if (argc == 2 || argc == 3 || argc == 4)
+  for (j = 1; (i =
+	       opt_action (argc, argv, param, buff,
+			   BUFFSIZE, DSTART)) != e_optend; j++)
     {
 
-      DFILE = argv[1];
-      GFILE = argv[1];
 
-      if (argc == 3 || argc == 4)
+      switch (i)
 	{
-
-	  if (!isUint (argv[2]))
+	case e_live:
+	  if (!isUint (buff))
 	    {
 	      fprintf (stderr,
-		       "ERR 1 ARG: %s is not positive number\n\n", argv[2]);
-	      showhelp (grappath (argv[0]));
+		       "ERR 1 ARG: %s is not positive number\n\n", buff);
+	      showhelp (grappath ((char *) argv[0]));
 	      return 1;
 	    }
-	  else if ((maxlives = s2ui (argv[2], 10)) < 1)
+	  else if ((maxlives = s2ui (buff, 10)) < 1)
 	    {
-	      fprintf (stderr, "ERR 1 ARG: %s is must >= 1\n\n", argv[2]);
-	      showhelp (grappath (argv[0]));
+	      fprintf (stderr, "ERR 1 ARG: %s is must >= 1\n\n", buff);
+	      showhelp (grappath ((char *) argv[0]));
 	      return 1;
 	    }
-	}
-
-      if (argc == 4)
-	{
-
-	  if (!isUint (argv[3]))
+	  break;
+	case e_step:
+	  if (!isUint (buff))
 	    {
 	      fprintf (stderr,
-		       "ERR 2 ARG: %s is not positive number\n\n", argv[3]);
-	      showhelp (grappath (argv[0]));
+		       "ERR 2 ARG: %s is not positive number\n\n", buff);
+	      showhelp (grappath ((char *) argv[0]));
 	      return 1;
 	    }
-	  else if ((addlivestep = s2ui (argv[3], 10)) < 1)
+	  else if ((addlivestep = s2ui (buff, 10)) < 1)
 	    {
-	      fprintf (stderr, "ERR 2 ARG: %s is must >= 1\n\n", argv[3]);
-	      showhelp (grappath (argv[0]));
+	      fprintf (stderr, "ERR 2 ARG: %s is must >= 1\n\n", buff);
+	      showhelp (grappath ((char *) argv[0]));
 	      return 1;
 	    }
+	  break;
+
+	case e_optother:
+	  strcpy (GFILE, buff);
+	  goto _start;
 
 	}
 
-    }
 
-  else
-    {
-      fprintf (stderr, "ERR ARG: Too many arguements\n\n");
-      showhelp (grappath (argv[0]));
-      return 1;
     }
+  fprintf (stderr, "ERR FILE: No input file\n\n");
+  showhelp (grappath ((char *) argv[0]));
+  return 1;
 
-/*******************************************************************************************************************/
+/* =================== Start ================ */
+_start:
   mm_init (&mm);
   hmf_srandom ();
-/***********************************************/
+
+
   if (!(gas = hmf_init (0, &mm)))
     {
       fprintf (stderr,
@@ -617,18 +626,17 @@ grappath (char *path)
 static void
 showhelp (const char *str)
 {
+  unsigned int i;
   fprintf (stderr, "%s version %s published in %s\n\n", STR_HMG_NAME,
 	   STR_HMG_VERSION, STR_HMG_YEAR);
 
-  fprintf (stderr, "USAGE: %s gamefile\n", str);
-
-  fprintf (stderr, "\tor\n");
-
-  fprintf (stderr, "USAGE: %s gamefile nlives\n", str);
-
-  fprintf (stderr, "\tor\n");
-
-  fprintf (stderr, "USAGE: %s gamefile nlives nstep\n\n", str);
+  fprintf (stderr, "USAGE: %s options file\n", str);
+  fprintf (stderr, "OPTIONS\n");
+  for (i = 0; param[i]; i++)
+    {
+      fprintf (stderr, "%s=\t%s\n", param[i], paramdes[i]);
+    }
+  fputc ('\n', stderr);
 }
 
 static void
