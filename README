@@ -18,8 +18,8 @@ Testing compiler
 Required libraries
 
 1. grap
-2. atoui in spec
-3. linklist
+2. opt
+3. liteList
 
 How to make
 1. git clone https://github.com/hwoy/livesman2.git

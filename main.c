@@ -151,7 +151,7 @@ main (int argc, char *argv[])
 
       if (i < 0)
 	{
-	  hmf_free (&mm, gas);
+	  mm_freeall (&mm);
 	  fclose (gfp);
 	  fprintf (stderr, "ERR FILE: %s\n", GFILE);
 
@@ -413,11 +413,6 @@ main (int argc, char *argv[])
     {
       showscore (gcount - 1, maxlives + nstep * addlivestep,
 		 hmf_getgroup (gas, gselected)->name, grappath (GFILE));
-    }
-
-  if ((j != FALID) && (j != GSEXTID))
-    {
-      mm_free (&mm, game);
     }
 
   mm_freeall (&mm);
