@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "hmg_engine.h"
+#include "mem/mem.h"
 
 #define UNCH '_'
 
@@ -29,7 +30,7 @@ hmf_init (int id)
       return (assem *) 0;
     }
 
-  initx (asmb, id);
+  l2_init (asmb, id);
   return asmb;
 }
 
@@ -38,7 +39,7 @@ void
 hmf_free (assem * asmb)
 {
 
-  freeallx (asmb);
+  l2_freeall (asmb);
   free (asmb);
 }
 
@@ -47,10 +48,10 @@ int
 hmf_add (assem * asmb, void *obj)
 {
   linklist *list;
-  if (!(list = newll ()))
+  if (!(list = l2_new ()))
     return 0;
   list->ptr = obj;
-  addx (asmb, list);
+  l2_add (asmb, list);
   return 1;
 }
 
@@ -61,7 +62,7 @@ hmf_getndata (assem * asmb, unsigned int gid)
   linklist *ptr;
   unsigned int n;
 
-  for (n = 0, ptr = asmb->beginx; ptr; ptr = ptr->forwx)
+  for (n = 0, ptr = asmb->begin; ptr; ptr = ptr->forw)
     {
 
       if (gid == DPTR (ptr->ptr)->gid)
@@ -80,7 +81,7 @@ hmf_getdata (assem * asmb, unsigned int gid, unsigned int index)
   linklist *ptr;
   unsigned int n;
 
-  for (n = 0, ptr = asmb->beginx; ptr; ptr = ptr->forwx)
+  for (n = 0, ptr = asmb->begin; ptr; ptr = ptr->forw)
     {
 
 
@@ -131,7 +132,7 @@ hmf_getgroup (assem * asmb, unsigned int gid)
 {
   linklist *ptr;
 
-  for (ptr = asmb->beginx; ptr; ptr = ptr->forwx)
+  for (ptr = asmb->begin; ptr; ptr = ptr->forw)
     {
 
 
@@ -151,7 +152,7 @@ hmf_getngroup (assem * asmb)
   linklist *ptr;
   unsigned int n;
 
-  for (n = 0, ptr = asmb->beginx; ptr; ptr = ptr->forwx, n++)
+  for (n = 0, ptr = asmb->begin; ptr; ptr = ptr->forw, n++)
     {
     }
 
