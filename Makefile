@@ -26,8 +26,9 @@ linkList/linklist.o: linkList/linklist.c
 
 
 require:
-	git clone https://github.com/hwoy/linklist.git && \
+	git clone https://github.com/hwoy/liteList.git && \
 git clone https://github.com/hwoy/grap.git && \
+git clone https://github.com/hwoy/mem.git && \
 && make deps
 deps:
 	make -C liteList && make -C grap && make -C mem
