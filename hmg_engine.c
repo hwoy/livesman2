@@ -230,4 +230,3 @@ hmf_freegame (hms_game * game)
 {
   free (game);
 }
-
