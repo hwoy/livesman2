@@ -2,8 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "liteList/linklist.h"
+#include "mem/mem.h"
+#include "grap/grap.h"
+
 #include "hmg_engine.h"
 #include "function.h"
+
 
 
 
@@ -36,7 +41,7 @@ static char buff[BUFFSIZE + 1];
 static char gr[GP_NLEN][GP_NCHAR];
 
 static const char STR_HMG_NAME[] = "LivesMan Game";
-static const char STR_HMG_VERSION[] = "2.21";
+static const char STR_HMG_VERSION[] = "2.27";
 static const char STR_HMG_YEAR[] = "2014";
 
 static char *GFILE;

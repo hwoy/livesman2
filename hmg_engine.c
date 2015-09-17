@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <time.h>
+#include "liteList/linklist.h"
+#include "mem/mem.h"
 #include "hmg_engine.h"
 
 
