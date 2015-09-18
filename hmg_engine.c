@@ -5,7 +5,6 @@
 #include "hmg_engine.h"
 
 
-#define UNCH '_'
 
 /*********************************** intit random functions ********************************/
 void
@@ -111,7 +110,7 @@ hmf_getdata (assem * asmb, unsigned int gid, unsigned int index)
 
 /*********************************** init game functions ********************************/
 hms_game *
-hmf_initgame (hms_data * data, unsigned int lives, memman * mm)
+hmf_initgame (hms_data * data, unsigned int lives, char unch, memman * mm)
 {
   hms_game *game;
   unsigned int i;
@@ -125,10 +124,11 @@ hmf_initgame (hms_data * data, unsigned int lives, memman * mm)
   game->lives = lives;
 
   game->win = 0;
+  game->unch = unch;
 
   for (i = 0; game->data->name[i]; i++)
     {
-      game->name[i * 2] = UNCH;
+      game->name[i * 2] = unch;
       game->name[i * 2 + 1] = 0x20;
     }
   game->name[i * 2] = 0;

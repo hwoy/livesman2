@@ -38,6 +38,8 @@
 #define ADDLIVES '*'
 #define SKIP '/'
 
+#define UNCH '_'
+
 static char buff[BUFFSIZE + 1];
 static char gr[GP_NLEN][GP_NCHAR];
 
@@ -501,7 +503,8 @@ if((n-1)%NCOL)   {putchar(NL);}
     }
   /* End of new game procedure */
   dselected = hmf_random (0, hmf_getndata (das, gselected) - 1);
-  game = hmf_initgame (hmf_getdata (das, gselected, dselected), lives, &mm);
+  game =
+    hmf_initgame (hmf_getdata (das, gselected, dselected), lives, UNCH, &mm);
   if (!game)
     {
       fprintf (stderr, "ERR INITGAME: Can not init for a game\n");
