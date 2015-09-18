@@ -2,7 +2,7 @@ cc = gcc
 bin = livesman
 CFLAGS = -O2 -std=c89 -pedantic -Wall -DANSI -Werror
 ar = ar
-.PHONY: all clean distclean require require_private deps rmdeps
+.PHONY: all clean distclean require require_private deps cleandeps
 
 all: $(bin)
 $(bin): main.o hmg_engine.o function.o grap/grap.o mem/mem.o liteList/linklist.o opt/opt.o
@@ -21,8 +21,8 @@ grap/grap.o: grap/grap.c
 	make -C grap
 mem/mem.o: mem/mem.c
 	make -C mem 
-linkList/linklist.o: linkList/linklist.c
-	make -C linkList 
+liteList/linklist.o: liteList/linklist.c
+	make -C liteList 
 opt/opt.o: opt/opt.c
 	make -C opt 
 
@@ -42,7 +42,7 @@ git clone ssh://git@server/share/data/src/opt.git
 deps:
 	make -C liteList && make -C grap && make -C mem && make -C opt
 
-rmdeps:
+cleandeps:
 	rm -rf liteList grap mem opt
 
 clean:
