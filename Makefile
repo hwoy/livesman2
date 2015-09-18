@@ -1,7 +1,7 @@
 cc = gcc
 bin = livesman
 CFLAGS = -O2 -std=c89 -pedantic -Wall -DANSI -Werror
-ar = ar
+
 .PHONY: all clean distclean require require_private deps cleandeps
 
 all: $(bin)
