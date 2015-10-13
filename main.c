@@ -88,7 +88,7 @@ main (int argc, const char *argv[])
 
   int i, j;
 
-  for (j = 1; (i =
+  for (j = DSTART; (i =
 	       opt_action (argc, argv, param, buff,
 			   BUFFSIZE, DSTART)) != e_optend; j++)
     {
