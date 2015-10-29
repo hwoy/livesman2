@@ -14,7 +14,7 @@ hmf_srandom(void)
 	srand(time(NULL));
 }
 
-int 
+int
 hmf_rand()
 {
 #ifdef _DEVRAND_
