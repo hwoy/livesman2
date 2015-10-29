@@ -57,3 +57,7 @@ hms_game *hmf_initgame (hms_data * data, unsigned int lives, char unch, memman *
 int hmf_gameplay (hms_game * game, char ch);	/*Play a game */
 
 hms_game *hmf_solve (hms_game * game);	/*solve a puzzle */
+
+#ifdef _DEVRAND_
+const char DEVRAND[]="/dev/random";
+#endif

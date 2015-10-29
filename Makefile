@@ -1,4 +1,4 @@
-cc = gcc
+cc = $(CC)
 bin = livesman
 CFLAGS = -O2 -std=c89 -pedantic -Wall -DANSI -Werror
 
@@ -12,7 +12,7 @@ $(bin): main.o hmg_engine.o function.o grap/grap.o mem/mem.o liteList/linklist.o
 main.o: main.c
 	$(cc) -c $(CFLAGS) main.c
 hmg_engine.o: hmg_engine.c
-	$(cc) -c $(CFLAGS) hmg_engine.c
+	$(cc) -c $(CFLAGS) -D_DEVRAND_ hmg_engine.c
 function.o:	function.c
 	$(cc) -c $(CFLAGS) function.c
 
