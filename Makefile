@@ -12,7 +12,7 @@ $(bin): main.o hmg_engine.o function.o grap/grap.o mem/mem.o liteList/linklist.o
 main.o: main.c
 	$(cc) -c $(CFLAGS) main.c
 hmg_engine.o: hmg_engine.c
-	$(cc) -c $(CFLAGS) -D_DEVRAND_ hmg_engine.c
+	$(cc) -c $(CFLAGS) hmg_engine.c # can add [ -D_DEVRAND_ ] for better randomize (on linux or BSDs)
 function.o:	function.c
 	$(cc) -c $(CFLAGS) function.c
 
