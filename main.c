@@ -134,8 +134,10 @@ main(int argc, const char *argv[])
 	/* =================== Start ================ */
 _start:
 	mm_init(&mm);
+	
+	#ifndef _DEVRAND_
 	hmf_srandom();
-
+	#endif
 
 	if (!(gas = hmf_init(0, &mm))) {
 		fprintf(stderr,

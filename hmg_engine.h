@@ -38,7 +38,7 @@ typedef struct {
 /*********** All function do not check NULL parameters. So that you could check them yourself ******************/
 
 void		hmf_srandom(void);	/* init seed random */
-int		hmf_random (int min, int max);	/* generate number */
+unsigned int		hmf_random (unsigned int min, unsigned int max);	/* generate number */
 
 unsigned int	hmf_getndata(assem * asmb, unsigned int gid);	/* return numbers of
 								 * data */
@@ -59,6 +59,4 @@ int		hmf_gameplay(hms_game * game, char ch);	/* Play a game */
 
 hms_game       *hmf_solve(hms_game * game);	/* solve a puzzle */
 
-#ifdef _DEVRAND_
-const char	DEVRAND[] = "/dev/random";
-#endif
+

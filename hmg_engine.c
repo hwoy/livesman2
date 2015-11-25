@@ -6,6 +6,9 @@
 #include "hmg_engine.h"
 
 
+#ifdef _DEVRAND_
+static const char	DEVRAND[] = "/dev/random";
+#endif
 
 /*********************************** intit random functions ********************************/
 void
@@ -14,28 +17,28 @@ hmf_srandom(void)
 	srand(time(NULL));
 }
 
-int
+unsigned int
 hmf_rand()
 {
 #ifdef _DEVRAND_
-	FILE           *fp;
-	int		i;
-	fp = fopen(DEVRAND, "rb");
-	if (!fp)
-		return 0;
-
-	((char *)&i)[0] = fgetc(fp);
-	((char *)&i)[1] = fgetc(fp);
-	fclose(fp);
-	return i;
+        FILE           *fp;
+        unsigned int             i,j,k;
+        fp = fopen(DEVRAND, "rb");
+        if (!fp)
+                return 0;
+		for(k=0,j=0;j<sizeof(i);j+=sizeof(char),k++)
+        ((char *)&i)[k] = fgetc(fp);
+	
+        fclose(fp);
+        return i;
 #else
 			return	rand   ();
 #endif
 }
 
 /*********************************** random functions ********************************/
-int
-hmf_random(int min, int max)
+unsigned int
+hmf_random(unsigned int min, unsigned int max)
 {
 	return min <= max ? min + (hmf_rand() % (max - min + 1)) : -1;
 }

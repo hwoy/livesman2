@@ -1,6 +1,6 @@
 cc = $(CC)
 bin = livesman
-CFLAGS = -O2 -std=c89 -pedantic -Wall -DANSI -Werror
+CFLAGS = -O2 -std=c89 -pedantic -Wall -DANSI -Werror #-D_DEVRAND_ # for better randomize (on linux or BSDs)
 
 .PHONY: all clean distclean require require_private deps cleandeps
 
@@ -12,7 +12,7 @@ $(bin): main.o hmg_engine.o function.o grap/grap.o mem/mem.o liteList/linklist.o
 main.o: main.c
 	$(cc) -c $(CFLAGS) main.c
 hmg_engine.o: hmg_engine.c
-	$(cc) -c $(CFLAGS) hmg_engine.c # can add [ -D_DEVRAND_ ] for better randomize (on linux or BSDs)
+	$(cc) -c $(CFLAGS) hmg_engine.c
 function.o:	function.c
 	$(cc) -c $(CFLAGS) function.c
 
