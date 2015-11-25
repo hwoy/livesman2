@@ -44,7 +44,7 @@ static char	buff[BUFFSIZE + 1];
 static char	gr  [GP_NLEN][GP_NCHAR];
 
 static const char STR_HMG_NAME[] = "LivesMan Game";
-static const char STR_HMG_VERSION[] = "2.28.2";
+static const char STR_HMG_VERSION[] = "2.28.3";
 static const char STR_HMG_YEAR[] = "2014";
 
 static char	GFILE[BUFFSIZE];
